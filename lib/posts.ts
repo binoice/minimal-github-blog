@@ -11,6 +11,8 @@ export type PostMeta = {
   author?: string;
   tags?: string[];
   categories?: string[];
+  collection?: string;
+  collectionOrder?: number;
 };
 
 export type Post = {
@@ -43,6 +45,8 @@ export function getPostBySlug(slug: string): Post {
       author: data.author ?? "Unknown",
       tags: data.tags ?? [],
       categories: data.categories ?? [],
+      collection: data.collection,
+      collectionOrder: data.collectionOrder,
     },
     content,
   };
@@ -73,4 +77,26 @@ export function getAllCategories(): string[] {
     post.meta.categories?.forEach(cat => categories.add(cat));
   });
   return Array.from(categories);
+}
+
+export function getPostsByCollection(collection: string): Post[] {
+  const posts = getAllPosts();
+  return posts
+    .filter((post) => post.meta.collection === collection)
+    .sort((a, b) => {
+      const orderA = a.meta.collectionOrder ?? 999;
+      const orderB = b.meta.collectionOrder ?? 999;
+      return orderA - orderB;
+    });
+}
+
+export function getAllCollections(): string[] {
+  const posts = getAllPosts();
+  const collections = new Set<string>();
+  posts.forEach(post => {
+    if (post.meta.collection) {
+      collections.add(post.meta.collection);
+    }
+  });
+  return Array.from(collections);
 }

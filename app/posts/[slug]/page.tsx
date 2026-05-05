@@ -1,4 +1,4 @@
-import { getPostBySlug, getAllPosts } from "@/lib/posts";
+import { getPostBySlug, getAllPosts, getPostsByCollection } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import ReactMarkdown from "react-markdown";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -79,6 +80,39 @@ export default async function PostPage({ params }: Props) {
       >
         {post.content}
       </ReactMarkdown>
+
+      {post.meta.collection && (() => {
+        const collectionPosts = getPostsByCollection(post.meta.collection!);
+        const currentIndex = collectionPosts.findIndex(p => p.slug === post.slug);
+        const prevPost = currentIndex > 0 ? collectionPosts[currentIndex - 1] : null;
+        const nextPost = currentIndex < collectionPosts.length - 1 ? collectionPosts[currentIndex + 1] : null;
+
+        return (
+          <div className="not-prose mt-24 pt-12 border-t-2 border-primary">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-8 text-center">
+              Part of series: <Link href="/collections" className="text-foreground hover:text-primary transition-colors underline underline-offset-4">{post.meta.collection}</Link>
+            </h3>
+            <div className="flex flex-col sm:flex-row justify-between gap-4">
+              {prevPost ? (
+                <Link href={`/posts/${prevPost.slug}`} className="flex-1 group">
+                  <div className="flex flex-col items-start p-6 border border-border hover:border-primary transition-colors bg-card h-full">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1 group-hover:text-primary transition-colors"><ArrowLeft className="w-3 h-3" /> Previous</span>
+                    <span className="font-serif text-xl leading-tight line-clamp-2">{prevPost.meta.title}</span>
+                  </div>
+                </Link>
+              ) : <div className="flex-1" />}
+              {nextPost ? (
+                <Link href={`/posts/${nextPost.slug}`} className="flex-1 group">
+                  <div className="flex flex-col items-end text-right p-6 border border-border hover:border-primary transition-colors bg-card h-full">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-1 group-hover:text-primary transition-colors">Next <ArrowRight className="w-3 h-3" /></span>
+                    <span className="font-serif text-xl leading-tight line-clamp-2">{nextPost.meta.title}</span>
+                  </div>
+                </Link>
+              ) : <div className="flex-1" />}
+            </div>
+          </div>
+        );
+      })()}
     </article>
   );
 }

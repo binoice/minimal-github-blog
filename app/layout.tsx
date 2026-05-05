@@ -10,6 +10,11 @@ const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 export const metadata: Metadata = {
   title: 'DevCanvas Minimalist Blog',
   description: 'A minimalistic blogging platform tailored for content and readability.',
+  alternates: {
+    types: {
+      'application/rss+xml': '/rss.xml',
+    },
+  },
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

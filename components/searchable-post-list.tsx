@@ -41,7 +41,7 @@ export function SearchablePostList({ initialPosts }: { initialPosts: Post[] }) {
         </div>
       ) : (
         <div className="text-center py-24 text-muted-foreground font-serif italic text-lg">
-          <p>No posts found matching "{searchQuery}"</p>
+          <p>No posts found matching &quot;{searchQuery}&quot;</p>
         </div>
       )}
     </div>

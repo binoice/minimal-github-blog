@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Rss } from "lucide-react";
 
 export function SiteHeader() {
   return (
@@ -11,10 +12,15 @@ export function SiteHeader() {
           </Link>
           <nav className="hidden md:flex gap-6 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             <Link href="/" className="text-foreground hover:text-foreground/80 transition-colors">Writings</Link>
+            <Link href="/collections" className="hover:text-foreground transition-colors">Series</Link>
             <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
           </nav>
         </div>
         <div className="flex items-center space-x-4">
+          <Link href="/rss.xml" className="text-muted-foreground hover:text-foreground transition-colors" target="_blank" rel="alternate" type="application/rss+xml">
+            <Rss className="h-[1.2rem] w-[1.2rem]" />
+            <span className="sr-only">RSS Feed</span>
+          </Link>
           <ThemeToggle />
         </div>
       </div>
