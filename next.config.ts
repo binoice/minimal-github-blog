@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  basePath: "/minimal-github-blog",
   output: 'export',
   transpilePackages: ['motion'],
   webpack: (config, {dev}) => {
